@@ -22,7 +22,7 @@ import axiosRetry from "axios-retry";
 
 
 const api = axios.create({
-  baseURL: "https://expensetracker-backend-1-npwu.onrender.com/",
+  baseURL: "https://personal-expense-tracker-backend-3cvb.onrender.com/",
   // baseURL: 'http://localhost:8070',
   timeout: 25000,
   headers: { Accept: "application/json" },
@@ -35,13 +35,13 @@ export function setAuthToken(authtoken) {
 
 
 axiosRetry(api, {
-    retries: 3,
-    retryDelay: (retryCount) => {
-        return retryCount * 1000;
-    },
-    retryCondition: (error) => {
-        return error.response?.status === 429 || error.response?.status >= 500;
-    },
+  retries: 3,
+  retryDelay: (retryCount) => {
+    return retryCount * 1000;
+  },
+  retryCondition: (error) => {
+    return error.response?.status === 429 || error.response?.status >= 500;
+  },
 });
 
 export default api;
