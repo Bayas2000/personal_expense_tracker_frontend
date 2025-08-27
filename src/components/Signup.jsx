@@ -71,13 +71,13 @@ const SignUp = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center ">
-      <img
+    <div className="min-h-screen flex items-center bg-gray-50 justify-center ">
+      {/* <img
         className="absolute inset-0 w-full h-full object-cover"
         src="https://images.pexels.com/photos/15307542/pexels-photo-15307542/free-photo-of-close-up-of-a-blue-fabric-surface.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
         alt="Finance Background"
-      />
-      <div className="bg-white bg-opacity-90 backdrop-filter backdrop-blur-sm rounded-2xl shadow-lg w-full max-w-xl p-8">
+      /> */}
+      <div className="bg-white bg-opacity-90 backdrop-filter backdrop-blur-sm rounded-2xl shadow-lg w-full max-w-xl p-8 m-4 ">
         <div className="text-center mb-6">
           <h1 className="text-3xl font-bold text-gray-800">Create Account</h1>
           <p className="text-gray-600 mt-1">Join us and track your expenses</p>

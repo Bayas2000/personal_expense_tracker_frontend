@@ -192,7 +192,7 @@ const Stats = () => {
                       </div>
                     </div>
                     <span className="text-sm font-semibold">
-                      ₹ {cat.amount}
+                      $ {cat.amount}
                     </span>
                   </div>
                   <div className="w-full bg-gray-200 h-2 rounded-full mt-3">

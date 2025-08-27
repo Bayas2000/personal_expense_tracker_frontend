@@ -22,6 +22,7 @@ import expenseImage from "../../assets/Expense_goals-Photoroom (1).png";
 import { motion } from "framer-motion";
 import { LoadRecurring } from "@/Store/Banner";
 import AddRecurringExpenseModal from "./RecurringModal";
+import moment from "moment";
 
 const Goals = () => {
   const mode = useSelector((state) => state.theme.mode);
@@ -37,10 +38,15 @@ const Goals = () => {
   const [selectedMonth, setSelectedMonth] = React.useState(
     monthOptions.find((m) => m.value === currentMonth)
   );
+  const [loading, setLoading] = React.useState(false);
 
   useEffect(() => {
+    setLoading(true);
     dispatch(LoadGoalsDetails(selectedMonth?.label, currentYear));
     dispatch(LoadRecurring());
+    setTimeout(() => {
+      setLoading(false);
+    }, 500);
   }, [selectedMonth]);
 
   useEffect(() => {
@@ -107,8 +113,19 @@ const Goals = () => {
     },
   ];
 
+  console.log(Recurring_List, "Recurring_list");
+
   const COLORS = ["#3B82F6", "#FBBF24", "#10B981"];
   const COLORS2 = ["#FB923C", "#F87171", "#FCD34D"]; // orange, red, yellow
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-[60vh]">
+        <div className="animate-spin rounded-full h-10 w-10 border-t-4 border-blue-500 border-solid" />
+      </div>
+    );
+  }
+
   return (
     <div className="px-4 py-4 max-w-screen-xl mx-auto w-full">
       <div
@@ -176,22 +193,25 @@ const Goals = () => {
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
             <SummaryCard
               title="Expense Target"
-              value={`₹${entry.expenseTargetAmount}`}
+              value={`$${entry.expenseTargetAmount}`}
               color="text-blue-600"
             />
             <SummaryCard
-              title="Daily Limit"
-              value={`₹${entry.safeExpenseLimit}`}
+              title="Actual Expense"
+              value={`$${totalExpense}`}
               color="text-green-600"
             />
             <SummaryCard
               title="Recurring Expense"
-              value={`0`}
+              value={`$${totalScheduled}`}
               color="text-yellow-500"
             />
             <SummaryCard
               title="Remaining Budget"
-              value={`0`}
+              value={`$${Math.max(
+                0,
+                (entry.expenseTargetAmount || 0) - totalExpense - totalScheduled
+              )}`}
               color="text-purple-600"
             />
           </div>
@@ -268,14 +288,14 @@ const Goals = () => {
                           <p>
                             Total:{" "}
                             <span className="text-gray-800 font-bold">
-                              ₹{payload[0].payload.total}
+                              ${payload[0].payload.total}
                             </span>
                           </p>
                           <p className="text-green-600">
-                            Within Limit: ₹{payload[0].payload.green}
+                            Within Limit: ${payload[0].payload.green}
                           </p>
                           <p className="text-red-500">
-                            Over Limit: ₹{payload[0].payload.red}
+                            Over Limit: ${payload[0].payload.red}
                           </p>
                         </div>
                       ) : null
@@ -287,7 +307,7 @@ const Goals = () => {
                     stroke="#6366F1"
                     strokeDasharray="3 3"
                     label={{
-                      value: `₹${limit} Daily Limit`,
+                      value: `$${limit} Daily Limit`,
                       position: "top",
                       fontSize: 10,
                       fill: "#6B7280",
@@ -336,7 +356,9 @@ const Goals = () => {
                         innerRadius={40}
                         outerRadius={90}
                         paddingAngle={3}
-                        label
+                        label={({ name, value }) =>
+                          `${name}: $${value.toLocaleString()}`
+                        }
                       >
                         {pieData.map((entry, index) => (
                           <Cell
@@ -345,7 +367,12 @@ const Goals = () => {
                           />
                         ))}
                       </Pie>
-                      <Tooltip />
+                      <Tooltip
+                        formatter={(value, name) => [
+                          `$${value.toLocaleString()}`,
+                          name,
+                        ]}
+                      />
                       <Legend verticalAlign="bottom" height={60} />
                     </PieChart>
                   </ResponsiveContainer>
@@ -384,24 +411,26 @@ const Goals = () => {
 
               <ul className="space-y-3 text-sm px-5 py-2">
                 {Recurring_List.length > 0 &&
-                  Recurring_List.map((item, index) => (
-                    <li
-                      key={index}
-                      className="flex justify-between items-center bg-gray-50 hover:bg-gray-100 transition-all rounded-lg px-4 py-3 shadow-sm border border-gray-200"
-                    >
-                      <div>
-                        <p className="font-medium text-gray-900">
-                          {item?.title}
-                        </p>
-                        <p className="text-xs text-gray-500">
-                          Due: {item.dueDate}
-                        </p>
-                      </div>
-                      <span className="text-blue-600 font-bold tracking-wide">
-                        ₹{item.amount}
-                      </span>
-                    </li>
-                  ))}
+                  Recurring_List.filter((data) => data.isActive === true).map(
+                    (item, index) => (
+                      <li
+                        key={index}
+                        className="flex justify-between items-center bg-gray-50 hover:bg-gray-100 transition-all rounded-lg px-4 py-3 shadow-sm border border-gray-200"
+                      >
+                        <div>
+                          <p className="font-medium text-gray-900">
+                            {item?.title}
+                          </p>
+                          <p className="text-xs text-gray-500">
+                            Due: {moment(item.dueDate).format("DD-MM-YYYY")}
+                          </p>
+                        </div>
+                        <span className="text-blue-600 font-bold tracking-wide">
+                          ${item.amount}
+                        </span>
+                      </li>
+                    )
+                  )}
               </ul>
             </div>
           </div>

@@ -40,9 +40,10 @@ const Login = ({ setOpenLogIn, setOptionModal }) => {
     try {
       const payload = {
         userName: username.trim(),
-        password
+        password,
+        deviceToken: pushToken || "",
       };
-
+      
       const res = await api.post("/userAuth/login", payload);
       const token = res.data.data;
       localStorage.setItem("token", token);

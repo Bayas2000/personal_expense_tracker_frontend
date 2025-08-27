@@ -1,21 +1,3 @@
-// import axios from "axios";
-
-// const api = axios.create({
-//     // baseURL: 'http://localhost:8070',
-//     baseURL: 'https://expensetracker-backend-1-npwu.onrender.com/',
-//     timeout: 25000,
-//     headers: { Accept: 'application/json' },
-//     withCredentials : true
-// })
-
-// export function setAuthToken(authtoken) {
-//     api.defaults.headers.common['Authorization'] = authtoken
-
-// }
-
-
-
-// export default api
 
 import axios from "axios";
 import axiosRetry from "axios-retry";
@@ -35,13 +17,13 @@ export function setAuthToken(authtoken) {
 
 
 axiosRetry(api, {
-  retries: 3,
-  retryDelay: (retryCount) => {
-    return retryCount * 1000;
-  },
-  retryCondition: (error) => {
-    return error.response?.status === 429 || error.response?.status >= 500;
-  },
+    retries: 3,
+    retryDelay: (retryCount) => {
+        return retryCount * 1000;
+    },
+    retryCondition: (error) => {
+        return error.response?.status === 429 || error.response?.status >= 500;
+    },
 });
 
 export default api;

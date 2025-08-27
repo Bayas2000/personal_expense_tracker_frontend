@@ -164,7 +164,7 @@ const Sidebar = () => {
   const sidebarLinks = [
     { key: "home", label: "Home", icon: Home },
     { key: "stats", label: "Stats", icon: BarChart },
-    { key: "goals", label: "Goals", icon: Target },
+    { key: "goals", label: "Expense Goals", icon: Target },
     { key: "profile", label: "Profile", icon: User },
     { key: "setting", label: "Settings", icon: Settings },
   ];
